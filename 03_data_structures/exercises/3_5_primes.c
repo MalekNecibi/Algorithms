@@ -24,11 +24,14 @@ int main(int argc, char* argv[]) {
     if (buffer == end)
         return -1;
     
-    // 0 : non-prime
-    // 1 : prime
+    // 0 : prime
+    // 1 : non-prime
     bool* primes_array = calloc(1 + max_val, sizeof(bool));
     if (!primes_array)
         return -2;
+    
+    primes_array[0] = true;
+    primes_array[1] = true;
     
     for (long i = 2; i <= max_val; i++) {
         for (long j = i*2; j <= max_val; j += i) {
@@ -40,7 +43,7 @@ int main(int argc, char* argv[]) {
     long prime_count = 0;
     for (long i = 1; i <= max_val; i++) {
         if (!primes_array[i]) {
-            //printf("%ld, ", i);
+            // printf("%ld, ", i);
             prime_count++;
         }
     }
