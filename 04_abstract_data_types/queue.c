@@ -3,8 +3,13 @@
 #include<limits.h>
 #include<stdbool.h>
 
+#ifndef DTYPE
 #define DTYPE int
-#define ERROR_VAL INT_MIN
+#endif
+
+#ifndef QUEUE_ERROR_VAL
+#define QUEUE_ERROR_VAL INT_MIN
+#endif
 
 // enqueue to tail
 // dequeue from head
@@ -58,10 +63,10 @@ bool isEmpty(Queue queue) {
     return (!queue->head || !queue->tail);
 }
 
-// return ERROR_VAL if empty/deleted queue provided
+// return QUEUE_ERROR_VAL if empty/deleted queue provided
 DTYPE dequeue(Queue queue) {
     if (!queue || isEmpty(queue)) {
-        return ERROR_VAL;
+        return QUEUE_ERROR_VAL;
     }
     
     QueueNode *old_head = queue->head;
@@ -139,7 +144,7 @@ int main(void) {
     printf("%d\n", dequeue(q));
     
     // dequeue more than enqueue
-    printf("%d (should be %d)\n", dequeue(q), ERROR_VAL);
+    printf("%d (should be %d)\n", dequeue(q), QUEUE_ERROR_VAL);
     
     enqueue(q, 38);
     enqueue(q, 239792);
@@ -148,11 +153,11 @@ int main(void) {
     deleteQueue(&q);
 
 
-    // should fail with ERROR_VAL
+    // should fail with QUEUE_ERROR_VAL
     enqueue(q, 18);
     enqueue(q, 1);
     enqueue(q, -9304792);
-    printf("Dequeue after deletion returns ERROR_VAL? %s\n", (dequeue(q) == ERROR_VAL) ? "true" : "false");
+    printf("Dequeue after deletion returns QUEUE_ERROR_VAL? %s\n", (dequeue(q) == QUEUE_ERROR_VAL) ? "true" : "false");
 
     deleteQueue(&q);
 

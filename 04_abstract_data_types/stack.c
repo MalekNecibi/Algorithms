@@ -3,8 +3,13 @@
 #include<limits.h>
 #include<stdbool.h>
 
+#ifndef DTYPE
 #define DTYPE int
-#define ERROR_VAL INT_MIN
+#endif
+
+#ifndef STACK_ERROR_VAL
+#define STACK_ERROR_VAL INT_MIN
+#endif
 
 // push to head
 // pop from head
@@ -58,10 +63,10 @@ bool isEmpty(Stack stack) {
 
 
 
-// return ERROR_VAL if empty/deleted stack provided
+// return STACK_ERROR_VAL if empty/deleted stack provided
 DTYPE pop(Stack stack) {
     if (!stack || isEmpty(stack)) {
-        return ERROR_VAL;
+        return STACK_ERROR_VAL;
     }
     
     StackNode *old_head = stack->head;
@@ -139,7 +144,7 @@ int main(void) {
     
     
 
-    // must all fail with ERROR_VAL, and without memory leaks
+    // must all fail with STACK_ERROR_VAL, and without memory leaks
     push(s, 18);
     push(s, 1);
     push(s, -9304792);
@@ -165,7 +170,7 @@ int main(void) {
     printf("%d\n", pop(s2));
     
     // pop more than push
-    printf("%d (should be %d)\n", pop(s2), ERROR_VAL);
+    printf("%d (should be %d)\n", pop(s2), STACK_ERROR_VAL);
     
     push(s2, 38);
     push(s2, 239792);
@@ -174,11 +179,11 @@ int main(void) {
     deleteStack(&s2);
 
 
-    // should fail with ERROR_VAL
+    // should fail with STACK_ERROR_VAL
     push(s2, 18);
     push(s2, 1);
     push(s2, -9304792);
-    printf("pop after deletion returns ERROR_VAL? %s\n", (pop(s2) == ERROR_VAL) ? "true" : "false");
+    printf("pop after deletion returns STACK_ERROR_VAL? %s\n", (pop(s2) == STACK_ERROR_VAL) ? "true" : "false");
 
     deleteStack(&s2);
 
