@@ -3,8 +3,8 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef DTYPE
-#define DTYPE int
+#ifndef STACK_DTYPE
+#define STACK_DTYPE int
 #endif
 
 #ifndef STACK_ERROR_VAL
@@ -27,12 +27,12 @@ struct StackMeta {
 };
 
 struct ListNode {
-    DTYPE value;
+    STACK_DTYPE value;
     struct ListNode* next;
 };
 
 // private
-StackNode* initStackNode(DTYPE value) {
+StackNode* initStackNode(STACK_DTYPE value) {
     StackNode* node = malloc( sizeof(StackNode) );
     if (!node) return NULL;
 
@@ -64,13 +64,13 @@ bool isEmpty(Stack stack) {
 
 
 // return STACK_ERROR_VAL if empty/deleted stack provided
-DTYPE pop(Stack stack) {
+STACK_DTYPE pop(Stack stack) {
     if (!stack || isEmpty(stack)) {
         return STACK_ERROR_VAL;
     }
     
     StackNode *old_head = stack->head;
-    DTYPE value = old_head->value;
+    STACK_DTYPE value = old_head->value;
     
     StackNode *new_head = old_head->next;
     stack->head = new_head;
@@ -85,7 +85,7 @@ DTYPE pop(Stack stack) {
 
 
 
-bool push(Stack stack, DTYPE value) {
+bool push(Stack stack, STACK_DTYPE value) {
     if (!stack) {
         return false;
     }

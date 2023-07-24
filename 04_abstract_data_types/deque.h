@@ -3,8 +3,8 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef DTYPE
-#define DTYPE int
+#ifndef DEQUE_DTYPE
+#define DEQUE_DTYPE int
 #endif
 
 #ifndef DEQUE_ERROR_VAL
@@ -24,13 +24,13 @@ struct DequeMeta {
 };
 
 struct DoubleListNode {
-    DTYPE value;
+    DEQUE_DTYPE value;
     struct DoubleListNode* next;
     struct DoubleListNode* prev;
 };
 
 // private
-DequeNode* initDequeNode(DTYPE value) {
+DequeNode* initDequeNode(DEQUE_DTYPE value) {
     DequeNode* node = malloc( sizeof(DequeNode) );
     if (!node) return NULL;
 
@@ -63,13 +63,13 @@ bool isEmpty(Deque deque) {
 }
 
 // return DEQUE_ERROR_VAL if empty/deleted deque provided
-DTYPE popRight(Deque deque) {
+DEQUE_DTYPE popRight(Deque deque) {
     if (!deque || isEmpty(deque)) {
         return DEQUE_ERROR_VAL;
     }
     
     DequeNode *old_tail = deque->tail;
-    DTYPE value = old_tail->value;
+    DEQUE_DTYPE value = old_tail->value;
     
     DequeNode *new_tail = old_tail->prev;
     deque->tail = new_tail;
@@ -86,13 +86,13 @@ DTYPE popRight(Deque deque) {
 }
 
 // return DEQUE_ERROR_VAL if empty/deleted deque provided
-DTYPE popLeft(Deque deque) {
+DEQUE_DTYPE popLeft(Deque deque) {
     if (!deque || isEmpty(deque)) {
         return DEQUE_ERROR_VAL;
     }
     
     DequeNode *old_head = deque->head;
-    DTYPE value = old_head->value;
+    DEQUE_DTYPE value = old_head->value;
     
     DequeNode *new_head = old_head->next;
     new_head->prev = NULL;
@@ -109,7 +109,7 @@ DTYPE popLeft(Deque deque) {
     return value;
 }
 
-bool pushLeft(Deque deque, DTYPE value) {
+bool pushLeft(Deque deque, DEQUE_DTYPE value) {
     if (!deque) {
         return false;
     }
@@ -134,7 +134,7 @@ bool pushLeft(Deque deque, DTYPE value) {
     return true;
 }
 
-bool pushRight(Deque deque, DTYPE value) {
+bool pushRight(Deque deque, DEQUE_DTYPE value) {
     if (!deque) {
         return false;
     }

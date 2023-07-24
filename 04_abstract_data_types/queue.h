@@ -3,8 +3,8 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef DTYPE
-#define DTYPE int
+#ifndef QUEUE_DTYPE
+#define QUEUE_DTYPE int
 #endif
 
 #ifndef QUEUE_ERROR_VAL
@@ -27,12 +27,12 @@ struct QueueMeta {
 };
 
 struct ListNode {
-    DTYPE value;
+    QUEUE_DTYPE value;
     struct ListNode* next;
 };
 
 // private
-QueueNode* initQueueNode(DTYPE value) {
+QueueNode* initQueueNode(QUEUE_DTYPE value) {
     QueueNode* node = malloc( sizeof(QueueNode) );
     if (!node) return NULL;
 
@@ -64,13 +64,13 @@ bool isEmpty(Queue queue) {
 }
 
 // return QUEUE_ERROR_VAL if empty/deleted queue provided
-DTYPE dequeue(Queue queue) {
+QUEUE_DTYPE dequeue(Queue queue) {
     if (!queue || isEmpty(queue)) {
         return QUEUE_ERROR_VAL;
     }
     
     QueueNode *old_head = queue->head;
-    DTYPE value = old_head->value;
+    QUEUE_DTYPE value = old_head->value;
     
     QueueNode *new_head = old_head->next;
     queue->head = new_head;
@@ -84,7 +84,7 @@ DTYPE dequeue(Queue queue) {
     return value;
 }
 
-bool enqueue(Queue queue, DTYPE value) {
+bool enqueue(Queue queue, QUEUE_DTYPE value) {
     if (!queue) {
         return false;
     }
