@@ -3,11 +3,9 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef QUEUE_DTYPE
+// caller must overwrite both
+#if !defined(QUEUE_DTYPE) && !defined(QUEUE_ERROR_VAL)
 #define QUEUE_DTYPE int
-#endif
-
-#ifndef QUEUE_ERROR_VAL
 #define QUEUE_ERROR_VAL INT_MIN
 #endif
 
@@ -63,6 +61,13 @@ bool isEmpty(Queue queue) {
     return (!queue->head || !queue->tail);
 }
 
+QUEUE_DTYPE peek(Queue queue) {
+    if (!queue || isEmpty(queue)) {
+        return QUEUE_ERROR_VAL;
+    }
+    return queue->head->value;
+}
+
 // return QUEUE_ERROR_VAL if empty/deleted queue provided
 QUEUE_DTYPE dequeue(Queue queue) {
     if (!queue || isEmpty(queue)) {
@@ -85,14 +90,11 @@ QUEUE_DTYPE dequeue(Queue queue) {
 }
 
 bool enqueue(Queue queue, QUEUE_DTYPE value) {
-    if (!queue) {
-        return false;
-    }
+    if (!queue) { return false; }
     
+    // create the new node
     QueueNode* node = initQueueNode(value);
-    if (!node) {
-        return false;
-    }
+    if (!node) { return false; }
     node->next = NULL;  // redundant but safe
 
     if ( isEmpty(queue) ) {

@@ -3,11 +3,9 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef DEQUE_DTYPE
+// caller must overwrite both
+#if !defined(DEQUE_DTYPE) && !defined(DEQUE_ERROR_VAL)
 #define DEQUE_DTYPE int
-#endif
-
-#ifndef DEQUE_ERROR_VAL
 #define DEQUE_ERROR_VAL INT_MIN
 #endif
 
@@ -30,7 +28,7 @@ struct DoubleListNode {
 };
 
 // private
-DequeNode* initDequeNode(DEQUE_DTYPE value) {
+DequeNode* _initDequeNode(DEQUE_DTYPE value) {
     DequeNode* node = malloc( sizeof(DequeNode) );
     if (!node) return NULL;
 
@@ -60,6 +58,22 @@ bool isEmpty(Deque deque) {
         }
     }
     return (!deque->head || !deque->tail);
+}
+
+// return DEQUE_ERROR_VAL if empty/deleted deque provided
+DEQUE_DTYPE peekRight(Stack deque) {
+    if (!deque || isEmpty(deque)) {
+        return DEQUE_ERROR_VAL;
+    }
+    return deque->tail->value;
+}
+
+// return DEQUE_ERROR_VAL if empty/deleted deque provided
+DEQUE_DTYPE peekLeft(Stack deque) {
+    if (!deque || isEmpty(deque)) {
+        return DEQUE_ERROR_VAL;
+    }
+    return deque->head->value;
 }
 
 // return DEQUE_ERROR_VAL if empty/deleted deque provided
@@ -110,21 +124,20 @@ DEQUE_DTYPE popLeft(Deque deque) {
 }
 
 bool pushLeft(Deque deque, DEQUE_DTYPE value) {
-    if (!deque) {
-        return false;
-    }
+    if (!deque) { return false; }
 
-    DequeNode* node = initDequeNode(value);
-    if (!node) {
-        return false;
-    }
+    // create the new node
+    DequeNode* node = _initDequeNode(value);
+    if (!node) { return false; }
     node->prev = NULL;  // redundant but safe
 
     if ( isEmpty(deque) ) {
+        // only 1 item now, head == tail
         node->next = NULL;
         deque->tail = node;
 
     } else {
+        // extend the head of linked list with new node
         node->next = deque->head;
         deque->head->prev = node;
     }
@@ -135,14 +148,11 @@ bool pushLeft(Deque deque, DEQUE_DTYPE value) {
 }
 
 bool pushRight(Deque deque, DEQUE_DTYPE value) {
-    if (!deque) {
-        return false;
-    }
+    if (!deque) { return false; }
     
-    DequeNode* node = initDequeNode(value);
-    if (!node) {
-        return false;
-    }
+    // create the new node
+    DequeNode* node = _initDequeNode(value);
+    if (!node) { return false; }
     node->next = NULL;  // redundant but safe
 
     if ( isEmpty(deque) ) {

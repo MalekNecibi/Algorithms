@@ -3,11 +3,9 @@
 #include<limits.h>
 #include<stdbool.h>
 
-#ifndef STACK_DTYPE
+// caller must overwrite both
+#if !defined(STACK_DTYPE) && !defined(STACK_ERROR_VAL)
 #define STACK_DTYPE int
-#endif
-
-#ifndef STACK_ERROR_VAL
 #define STACK_ERROR_VAL INT_MIN
 #endif
 
@@ -23,7 +21,6 @@ typedef struct StackMeta* Stack;
 
 struct StackMeta {
     StackNode* head;
-
 };
 
 struct ListNode {
@@ -32,7 +29,7 @@ struct ListNode {
 };
 
 // private
-StackNode* initStackNode(STACK_DTYPE value) {
+StackNode* _initStackNode(STACK_DTYPE value) {
     StackNode* node = malloc( sizeof(StackNode) );
     if (!node) return NULL;
 
@@ -44,10 +41,8 @@ StackNode* initStackNode(STACK_DTYPE value) {
 Stack initStack() {
     Stack stack = calloc(1, sizeof(struct StackMeta));
     stack->head = NULL;
-
     return stack;
 }
-
 
 bool isEmpty(Stack stack) {
     if (!stack) {
@@ -57,11 +52,13 @@ bool isEmpty(Stack stack) {
     return (!stack->head);
 }
 
-
-
-
-
-
+// return STACK_ERROR_VAL if empty/deleted stack provided
+STACK_DTYPE peek(Stack stack) {
+    if (!stack || isEmpty(stack)) {
+        return STACK_ERROR_VAL;
+    }
+    return stack->head->value;
+}
 
 // return STACK_ERROR_VAL if empty/deleted stack provided
 STACK_DTYPE pop(Stack stack) {
@@ -79,35 +76,20 @@ STACK_DTYPE pop(Stack stack) {
     return value;
 }
 
-
-
-
-
-
-
 bool push(Stack stack, STACK_DTYPE value) {
     if (!stack) {
         return false;
     }
     
-    StackNode* node = initStackNode(value);
-    if (!node) {
-        return false;
-    }
+    // create the new node
+    StackNode* node = _initStackNode(value);
+    if (!node) { return false; }
     node->next = stack->head;
-
+    
     stack->head = node;
+
     return true;
 }
-
-
-
-
-
-
-
-
-
 
 void deleteStack(Stack* _stack) {
     if (!_stack || !*_stack) {
@@ -123,6 +105,3 @@ void deleteStack(Stack* _stack) {
     free(stack);
     *_stack = NULL;
 }
-
-
-
