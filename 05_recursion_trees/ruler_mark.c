@@ -1,33 +1,26 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<math.h>
 
-void _mark_ruler(int* ruler, int left, int right, size_t height) {
+void _mark_ruler(short* tickmarks, size_t left, size_t right, short height) {
 //    printf("[%d,%d] : %zu\n", left, right, height);
     
-    int mid = left + (right-left) / 2;
-    if (0 != ruler[mid]) {
-        printf("Warning: [%d] previously set with %d (h=%zu)\n", mid, ruler[mid], height);
-    } else {
-        ruler[mid] = height;
-    }
-
-    if (left >= right) {
-//        return;
-    }
-
+    size_t mid = left + (right-left) / 2;
+    tickmarks[mid] = height;
+    
     if (height <= 1) {
         return;
     }
     
-    _mark_ruler(ruler, left,   mid-1, height-1);
-    _mark_ruler(ruler, mid+1,  right, height-1);
+    _mark_ruler(tickmarks, left,  mid-1, height-1);
+    _mark_ruler(tickmarks, mid+1, right, height-1);
 }
 
-void printRuler(int* ruler, size_t rulerSize) {
+void printRuler(short* tickmarks, size_t rulerSize) {
     for (size_t i = 0; i < rulerSize; i++) {
         printf("%3zu \n", i);
         printf("    ");
-        for (size_t j = 0; j < ruler[i]; j++) {
+        for (short j = 0; j < tickmarks[i]; j++) {
             printf(" X");
         }
         printf("\n");
@@ -36,58 +29,38 @@ void printRuler(int* ruler, size_t rulerSize) {
     return;
 }
 
-// max_height must be power of 2
-void mark_ruler(size_t num_tickmarks) {
+void mark_ruler(short max_height) {
+    // number of tickmarks = 2 ^ tallest tickmark - 1
+    size_t num_tickmarks = ( (size_t)1 << max_height ) - 1;
     
-    // num_tickmarks must be 1 less than a power-of-2
-    size_t input_validator = num_tickmarks + 1;
-    size_t max_height = 0;
+    short* tickmarks = malloc(num_tickmarks * sizeof(short));
     
-    while (! (input_validator & 0b1)) {
-        max_height++;
-        input_validator >>= 1;
-    }
-
-    if (1 != input_validator) {
-        printf("ERROR: %zu is not a valid number of tickmarks!\n", num_tickmarks);
-        printf("\tValue must be 1 less than a power-of-2 (e.g. 15)\n");
-        return;
-    }
+    _mark_ruler(tickmarks, 0, num_tickmarks-1, max_height);
+    printRuler(tickmarks, num_tickmarks);
     
-    //int* ruler = malloc(max_height * sizeof(int));
-    int* ruler = calloc(num_tickmarks, sizeof(int));
-    
-    _mark_ruler(ruler, 0, num_tickmarks-1, max_height);
-    
-    printRuler(ruler, num_tickmarks);
-    
-    free(ruler);
+    free(tickmarks);
     return;
 }
 
 
 int main(int argc, char* argv[]) {
-    
-    size_t num_tickmarks;
+    short max_height;
 
     if (argc < 2) {
-        printf("Usage: %s <num_tickmarks>\n", argv[0]);
+        printf("Usage: %s <tickmarks_max_height>\n", argv[0]);
         return 1;
 
     } else {
-        if (1 != sscanf(argv[1], "%zu", &num_tickmarks)) {
+        if (1 != sscanf(argv[1], "%hu", &max_height)) {
             return 2;
+        }
+        if (max_height >= 32) {
+            printf("ERROR: maximum height = 32\n");
+            return 3;
         }
     }
 
-    mark_ruler(num_tickmarks);
-    
-    // initial call (left, right, num_subdivisions
-    // know outer boundary values
-    // start in center (midpoint outers)
-    // draw midpoint with height=num_subdivisions
-    // recurse left
-        // left=left, right=left + (right-left)/2, height=height/2
+    mark_ruler(max_height);
     
     return 0;
 }
