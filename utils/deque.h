@@ -61,7 +61,7 @@ bool isEmpty(Deque deque) {
 }
 
 // return DEQUE_ERROR_VAL if empty/deleted deque provided
-DEQUE_DTYPE peekRight(Stack deque) {
+DEQUE_DTYPE peekRight(Deque deque) {
     if (!deque || isEmpty(deque)) {
         return DEQUE_ERROR_VAL;
     }
@@ -69,7 +69,7 @@ DEQUE_DTYPE peekRight(Stack deque) {
 }
 
 // return DEQUE_ERROR_VAL if empty/deleted deque provided
-DEQUE_DTYPE peekLeft(Stack deque) {
+DEQUE_DTYPE peekLeft(Deque deque) {
     if (!deque || isEmpty(deque)) {
         return DEQUE_ERROR_VAL;
     }
@@ -109,7 +109,6 @@ DEQUE_DTYPE popLeft(Deque deque) {
     DEQUE_DTYPE value = old_head->value;
     
     DequeNode *new_head = old_head->next;
-    new_head->prev = NULL;
     deque->head = new_head;
 
     if (NULL == new_head) {
